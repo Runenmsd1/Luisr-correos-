@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>LUIS R | CORREOS ETERNOS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e1a;color:#e2e8f0;padding:16px;transition:background 0.3s}
+body.light-mode{background:#f0f2f5;color:#1a1a2e}
+body.light-mode .card{background:#ffffff}
+body.light-mode .modal-content{background:#ffffff}
+body.light-mode .settings-panel{background:#ffffff;color:#1a1a2e}
+.container{max-width:550px;margin:0 auto}
+.header{text-align:center;margin-bottom:20px}
+.logo-container{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.glow-item{display:inline-block;animation:goldenPulse 1.8s ease-in-out infinite;text-shadow:0 0 5px #eab308,0 0 10px #ca8a04}
+.scorpion-glow{font-size:38px}
+.luis-text{font-size:32px;font-weight:900;color:#eab308;letter-spacing:2px}
+@keyframes goldenPulse{
+    0%{text-shadow:0 0 3px #eab308,0 0 6px #ca8a04;opacity:0.7}
+    50%{text-shadow:0 0 15px #eab308,0 0 25px #ca8a04;opacity:1}
+    100%{text-shadow:0 0 3px #eab308,0 0 6px #ca8a04;opacity:0.7}
+}
+.sub{font-size:8px;color:#22c55e;text-align:center;margin-top:4px}
+.card{background:#131b2e;border-radius:24px;padding:20px;margin-bottom:16px;border:1px solid #1e293b}
+.provider-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.provider-btn{background:#0a0e1a;border:1px solid #1e293b;border-radius:16px;padding:8px;text-align:center;cursor:pointer;transition:all 0.2s}
+.provider-btn.active{background:#eab308;color:#0a0e1a;border-color:#eab308}
+.provider-name{font-size:11px;font-weight:700}
+.provider-expiry{font-size:7px;opacity:0.7}
+.email-box{background:#0a0e1a;border-radius:16px;padding:16px;text-align:center;margin-bottom:16px;border:1px solid #1e293b}
+.email-visual{font-size:12px;font-weight:800;color:#fbbf24;word-break:break-all;background:#1e293b;padding:10px;border-radius:12px;font-family:monospace}
+.respaldo-info{background:#1e293b;border-radius:12px;padding:8px;margin-top:10px;font-size:9px;color:#7ab7ef;text-align:center}
+.respaldo-info span{color:#eab308;font-weight:bold}
+.btn{width:100%;padding:12px;border:none;border-radius:14px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:8px}
+.btn-primary{background:linear-gradient(135deg,#eab308,#ca8a04);color:#0a0e1a}
+.btn-secondary{background:#1e293b;color:#e2e8f0;border:1px solid #334155}
+.btn-telegram{background:#1e3a5f;color:#7ab7ef}
+.action-buttons{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.action-buttons .btn{flex:1;margin-bottom:0;padding:10px;font-size:11px}
+#refreshBtn{flex:0 0 44px;font-size:18px;padding:10px 0;border-radius:50%}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
+.stat-card{background:#0a0e1a;border-radius:14px;padding:6px;text-align:center;border:1px solid #1e293b}
+.stat-number{font-size:14px;font-weight:800;color:#eab308}
+.stat-label{font-size:7px;color:#64748b}
+.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.tab{flex:1;background:#0a0e1a;border:1px solid #1e293b;padding:5px;border-radius:12px;text-align:center;cursor:pointer;font-size:8px;font-weight:600}
+.tab.active{background:#eab308;color:#0a0e1a}
+.inbox{min-height:300px;max-height:400px;overflow-y:auto}
+.msg-item{background:#0a0e1a;border:1px solid #1e293b;border-radius:14px;padding:10px;margin-bottom:8px;cursor:pointer}
+.msg-item:hover{background:#1a2340}
+.msg-from{font-weight:600;color:#cbd5e1;font-size:11px}
+.msg-subject{font-size:10px;color:#94a3b8}
+.msg-code{background:#166534;display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;color:#86efac;margin-top:6px;font-family:monospace}
+.msg-time{font-size:8px;color:#475569;margin-top:5px}
+.msg-actions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.action-btn{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:4px 8px;font-size:9px;cursor:pointer}
+.action-btn.danger{background:#7f1d1d}
+.action-btn.success{background:#166534}
+.empty{text-align:center;padding:40px 20px;color:#475569;font-size:12px}
+.pagination{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:16px;padding:8px}
+.pagination button{background:#1e293b;border:1px solid #334155;border-radius:20px;padding:6px 12px;color:#e2e8f0;cursor:pointer;font-size:10px}
+.pagination button:disabled{opacity:0.5;cursor:not-allowed}
+.pagination span{font-size:10px;color:#eab308}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#166534;color:white;padding:10px 16px;border-radius:40px;z-index:1000;opacity:0;transition:opacity 0.3s;font-size:12px}
+.toast.show{opacity:1}
+.toast.error{background:#dc2626}
+.toolbar{position:fixed;bottom:20px;right:20px;z-index:100}
+.gear-btn{background:#eab308;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:22px;transition:transform 0.2s}
+.gear-btn:hover{transform:rotate(90deg)}
+.settings-panel{position:fixed;bottom:80px;right:20px;background:#131b2e;border-radius:20px;padding:14px;width:300px;border:1px solid #eab308;z-index:99;display:none;max-height:80vh;overflow-y:auto}
+.settings-panel.show{display:block}
+.settings-panel h4{font-size:11px;margin-bottom:10px;color:#eab308;border-bottom:1px solid #1e293b;padding-bottom:5px}
+.setting-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:10px;flex-wrap:wrap;gap:6px}
+.setting-row button{background:#1e293b;border:none;padding:5px 10px;border-radius:8px;color:#e2e8f0;cursor:pointer;font-size:9px}
+.setting-row input{background:#1e293b;border:none;padding:5px;border-radius:6px;color:white;font-size:9px;width:170px}
+.switch-btn-sm{width:36px;height:18px;background:#1e293b;border-radius:9px;cursor:pointer;position:relative}
+.switch-btn-sm.active{background:#166534}
+.switch-btn-sm::after{content:'';width:14px;height:14px;background:white;border-radius:50%;position:absolute;top:2px;left:2px;transition:0.2s}
+.switch-btn-sm.active::after{left:20px}
+.timer-box{background:#1e293b;border-radius:12px;padding:6px;text-align:center;margin-top:8px}
+.timer-text{font-size:9px;color:#eab308}
+.warning{color:#dc2626;font-size:9px}
+.progress-expire{height:3px;background:#1e293b;border-radius:2px;margin-top:5px}
+.progress-expire-fill{height:100%;width:0%;background:#eab308;border-radius:2px}
+footer{text-align:center;font-size:6px;color:#475569;margin-top:12px}
+.copy-toast-success{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#00ff88;color:#0a0e1a;padding:12px 24px;border-radius:40px;font-weight:bold;font-size:14px;z-index:1001;box-shadow:0 0 20px #00ff88;animation:fadeOut 2s ease-in-out}
+@keyframes fadeOut{0%{opacity:1}70%{opacity:1}100%{opacity:0}}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center}
+.modal-content{background:#131b2e;border-radius:24px;padding:16px;width:90%;max-width:380px}
+.modal-content input,.modal-content textarea{width:100%;background:#0a0e1a;border:1px solid #1e293b;border-radius:10px;padding:8px;color:white;margin-bottom:10px;font-size:12px}
+hr{margin:10px 0;border-color:#1e293b}
+.confirm-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:300;display:flex;align-items:center;justify-content:center}
+.confirm-modal-content{background:#131b2e;border-radius:24px;padding:24px;width:280px;text-align:center;border:1px solid #eab308}
+.confirm-modal-buttons{display:flex;gap:12px;margin-top:20px}
+.confirm-modal-buttons button{flex:1;padding:10px;border:none;border-radius:12px;cursor:pointer}
+.confirm-yes{background:#dc2626;color:white}
+.confirm-no{background:#1e293b;color:white}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div class="logo-container">
+<span class="glow-item scorpion-glow">🦂</span>
+<span class="glow-item luis-text">LUIS R</span>
+<span class="glow-item scorpion-glow">🦂</span>
+</div>
+<div class="sub">⚡ 3 PROVEEDORES · CLASIFICACIÓN INTELIGENTE · 3 GMAILS · TELEGRAM ⚡</div>
+</div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-number" id="totalEmails">0</div><div class="stat-label">Total</div></div>
+<div class="stat-card"><div class="stat-number" id="totalCodes">0</div><div class="stat-label">Códigos</div></div>
+<div class="stat-card"><div class="stat-number" id="totalTelegram">0</div><div class="stat-label">Telegram</div></div>
+<div class="stat-card"><div class="stat-number" id="totalReenviados">0</div><div class="stat-label">Enviados a Gmail</div></div>
+</div>
+
+<div class="card">
+<div class="provider-selector" id="providerSelector">
+<div class="provider-btn" data-provider="1secmail"><div class="provider-name">📧 1SECMAIL</div><div class="provider-expiry">~24 horas</div></div>
+<div class="provider-btn" data-provider="mailtm"><div class="provider-name">📧 MAIL.TM</div><div class="provider-expiry">~30 días</div></div>
+<div class="provider-btn" data-provider="guerrilla"><div class="provider-name">📧 GUERRILLA</div><div class="provider-expiry">~1 hora</div></div>
+</div>
+<div class="email-box">
+<div class="email-visual" id="emailVisual">⚡ Selecciona un proveedor</div>
+<div class="timer-box" id="timerBox" style="display:none">
+<div class="timer-text">⏱️ <span id="countdownTimer">--:--:--</span></div>
+<div class="progress-expire"><div class="progress-expire-fill" id="expireFill"></div></div>
+<div id="expirationWarning" class="warning" style="display:none">⚠️ ¡EXPIRA PRONTO! Migra tu cuenta</div>
+</div>
+<div class="respaldo-info">
+📧 Clasificación inteligente:<br>
+🔐 Códigos → <span>manzaxxoop@gmail.com</span><br>
+💰 Pagos → <span>calvoe847@gmail.com</span><br>
+📦 Todo lo demás → <span>usototal057@gmail.com</span>
+</div>
+</div>
+<div class="action-buttons">
+<button class="btn btn-primary" id="genBtn">🖥️ GENERAR</button>
+<button class="btn btn-secondary" id="copyBtn">📋 COPIAR</button>
+<button class="btn btn-secondary" id="refreshBtn" title="Refrescar">🔄</button>
+</div>
+<button class="btn btn-telegram" id="migrationBtn">🔄 ASISTENTE DE MIGRACIÓN</button>
+</div>
+
+<div class="card">
+<div class="tabs">
+<div class="tab active" data-tab="archived">📦 ARCH (<span id="countArchived">0</span>)</div>
+<div class="tab" data-tab="inbox">📥 BANDEJA (<span id="countInbox">0</span>)</div>
+<div class="tab" data-tab="dead">💀 PAPEL (<span id="countDead">0</span>)</div>
+</div>
+<div class="inbox" id="inboxContainer"><div class="empty">📭 Selecciona un proveedor</div></div>
+<div class="pagination" id="paginationContainer" style="display:none">
+<button id="prevPageBtn" disabled>◀ Anterior</button>
+<span id="pageInfo">Página 1</span>
+<button id="nextPageBtn">Siguiente ▶</button>
+</div>
+</div>
+<footer>🔐 PIN 1515 · Clasificación automática a 3 Gmails · Respaldo local</footer>
+</div>
+
+<div class="toolbar">
+<div class="gear-btn" id="gearBtn">⚙️</div>
+<div class="settings-panel" id="settingsPanel">
+<h4>⚙️ CONFIGURACIÓN</h4>
+<div class="setting-row"><span>📨 Enviar a Telegram</span><div class="switch-btn-sm" id="telegramSwitchSm"></div></div>
+<div class="setting-row"><span>📦 Archivar automático</span><div class="switch-btn-sm" id="autoArchiveSwitchSm"></div></div>
+<div class="setting-row"><span>🌓 Modo oscuro/claro</span><div class="switch-btn-sm" id="themeSwitchSm"></div></div>
+<div class="setting-row"><span>⏰ Alerta expiración</span><div class="switch-btn-sm" id="expirationAlertSwitchSm"></div></div>
+<div class="setting-row"><span>🔔 Notificaciones push</span><div class="switch-btn-sm" id="notifSwitchSm"></div></div>
+<div class="setting-row"><span>🎵 Sonido al recibir</span><div class="switch-btn-sm" id="soundSwitchSm"></div></div>
+<div class="setting-row"><span>🔐 Auto-copiar código</span><div class="switch-btn-sm" id="autoCopySwitchSm"></div></div>
+<div class="setting-row"><span>💾 Respaldo automático</span><div class="switch-btn-sm" id="autoBackupSwitchSm"></div></div>
+<div class="setting-row"><span>📧 Envío automático a Gmail</span><div class="switch-btn-sm" id="autoGmailSwitchSm"></div></div>
+<hr>
+<div class="setting-row"><span>🔐 Gmail códigos</span><input type="email" id="gmailCodigos" value="manzaxxoop@gmail.com"></div>
+<div class="setting-row"><span>💰 Gmail pagos</span><input type="email" id="gmailPagos" value="calvoe847@gmail.com"></div>
+<div class="setting-row"><span>📦 Gmail general</span><input type="email" id="gmailTodo" value="usototal057@gmail.com"></div>
+<div class="setting-row"><span><button id="updateGmailBtn">Actualizar Gmails</button></span></div>
+<hr>
+<div class="setting-row"><span>📂 Guardar respaldo</span><button id="exportJsonBtn">EXPORTAR JSON</button></div>
+<div class="setting-row"><span>📊 Exportar códigos a CSV</span><button id="exportCsvBtn">CSV</button></div>
+<div class="setting-row"><span>💾 Recuperar respaldo</span><button id="importBackupBtn">IMPORTAR</button></div>
+<div class="setting-row"><span>🔒 Recuperar correo anterior</span><button id="restorePrevEmailBtn">RECUPERAR</button></div>
+<hr>
+<div class="setting-row"><span>🐦 Probar Telegram</span><button id="testTelegramBtnSm">ENVIAR PRUEBA</button></div>
+<div class="setting-row"><span>📧 Probar Gmail</span><button id="testGmailBtnSm">ENVIAR PRUEBA</button></div>
+<div class="setting-row"><span>📊 Enviar estadísticas</span><button id="sendStatsBtn">ENVIAR STATS</button></div>
+<div class="setting-row"><span>🗑️ Borrar todos los datos</span><button id="clearAllBtnSm" style="background:#7f1d1d">BORRAR TODO</button></div>
+<hr>
+<div class="setting-row"><span>🔎 Buscar correos</span><input type="text" id="searchInputSm" placeholder="Buscar..."></div>
+</div>
+</div>
+
+<div id="importModal" class="modal"><div class="modal-content"><h3>Recuperar respaldo</h3><textarea id="importJsonData" rows="5" placeholder="Pega aquí el JSON..."></textarea><button class="btn btn-primary" id="confirmImportBtn">Restaurar</button><button class="btn btn-secondary" id="closeImportModal">Cancelar</button></div></div>
+<div id="migrationModal" class="modal"><div class="modal-content"><h3>🔄 Asistente de Migración</h3><input type="email" id="migrationNewEmail" placeholder="nuevo@correo.com" value="usototal057@gmail.com"><button class="btn btn-primary" id="confirmMigrationBtn">Migrar</button><button class="btn btn-secondary" id="closeMigrationModal">Cancelar</button></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const TELEGRAM_TOKEN = '8708803857:AAHsIF_AbBuM_GPam1MWYBBRFycRSWAA4Cs';
+const TELEGRAM_CHAT_ID = '1183299436';
+const PIN = '1515';
+const STORAGE_KEY = 'luisr_final_v1';
+const ITEMS_PER_PAGE = 20;
+
+let currentProvider = '1secmail';
+let currentEmail = '', currentLogin = '', currentDomain = '', emailCreatedAt = null;
+let inbox = [], deadZone = [], archived = [];
+let currentTab = 'archived';
+let autoArchive = true, telegramEnabled = true, autoGmailEnabled = true, darkMode = false;
+let expirationAlert = true, notificationsEnabled = false, soundEnabled = false, autoCopyCode = true, autoBackupEnabled = true;
+let telegramCount = 0, gmailCount = 0, lastBackupDate = null, searchTerm = '';
+let autoCheckInterval = null, countdownInterval = null;
+let guerrillaSession = null, mailtmToken = null;
+let currentPage = 1;
+let gmailCodigos = 'manzaxxoop@gmail.com';
+let gmailPagos = 'calvoe847@gmail.com';
+let gmailTodo = 'usototal057@gmail.com';
+
+const providerExpiry = { '1secmail': 24, 'mailtm': 720, 'guerrilla': 1 };
+const providerNames = { '1secmail': '1SECMAIL', 'mailtm': 'MAIL.TM', 'guerrilla': 'GUERRILLA' };
+const palabrasCodigo = ['código', 'codigo', 'verification', 'verify', 'otp', '2fa', 'pin', 'token'];
+const palabrasPago = ['pago', 'payment', 'invoice', 'factura', 'subscription', 'suscripción', 'recibo', 'compra'];
+
+function clasificarCorreo(from, subject, body, code) {
+    let texto = `${from} ${subject} ${body}`.toLowerCase();
+    if(code) return { tipo: 'codigo', email: gmailCodigos, badge: '🔐 Código' };
+    for(let p of palabrasPago) if(texto.includes(p)) return { tipo: 'pago', email: gmailPagos, badge: '💰 Pago' };
+    for(let p of palabrasCodigo) if(texto.includes(p)) return { tipo: 'codigo', email: gmailCodigos, badge: '🔐 Posible código' };
+    return { tipo: 'general', email: gmailTodo, badge: '📦 General' };
+}
+
+function showToast(msg, isError = false) {
+    let t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (isError ? ' error' : '');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
+function showCopySuccess() {
+    let div = document.createElement('div');
+    div.className = 'copy-toast-success';
+    div.innerText = '✓ CORREO COPIADO';
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 2000);
+}
+function playBeep() { if(soundEnabled) try{new Audio("data:audio/wav;base64,U3RlYWx0aCBzb3VuZA==").play();}catch(e){} }
+function notifyUser(title, body) { if(notificationsEnabled && Notification.permission==='granted') new Notification(title,{body}); else if(notificationsEnabled && Notification.permission!=='denied') Notification.requestPermission(); }
+function escapeHtml(s) { if(!s) return ''; return String(s).replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+
+function saveData() {
+    let storage = { currentProvider, currentEmail, currentLogin, currentDomain, emailCreatedAt, inbox, deadZone, archived, autoArchive, telegramEnabled, autoGmailEnabled, telegramCount, gmailCount, darkMode, expirationAlert, notificationsEnabled, soundEnabled, autoCopyCode, autoBackupEnabled, lastBackupDate, guerrillaSession, mailtmToken, gmailCodigos, gmailPagos, gmailTodo };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+    updateStats();
+}
+
+function loadData() {
+    let s = localStorage.getItem(STORAGE_KEY);
+    if(s) {
+        try {
+            let d = JSON.parse(s);
+            currentProvider = d.currentProvider || '1secmail';
+            currentEmail = d.currentEmail || '';
+            currentLogin = d.currentLogin || '';
+            currentDomain = d.currentDomain || '';
+            emailCreatedAt = d.emailCreatedAt || null;
+            inbox = d.inbox || [];
+            deadZone = d.deadZone || [];
+            archived = d.archived || [];
+            autoArchive = d.autoArchive !== undefined ? d.autoArchive : true;
+            telegramEnabled = d.telegramEnabled !== undefined ? d.telegramEnabled : true;
+            autoGmailEnabled = d.autoGmailEnabled !== undefined ? d.autoGmailEnabled : true;
+            telegramCount = d.telegramCount || 0;
+            gmailCount = d.gmailCount || 0;
+            darkMode = d.darkMode || false;
+            expirationAlert = d.expirationAlert !== undefined ? d.expirationAlert : true;
+            notificationsEnabled = d.notificationsEnabled || false;
+            soundEnabled = d.soundEnabled || false;
+            autoCopyCode = d.autoCopyCode !== undefined ? d.autoCopyCode : true;
+            autoBackupEnabled = d.autoBackupEnabled !== undefined ? d.autoBackupEnabled : true;
+            lastBackupDate = d.lastBackupDate || null;
+            guerrillaSession = d.guerrillaSession || null;
+            mailtmToken = d.mailtmToken || null;
+            gmailCodigos = d.gmailCodigos || 'manzaxxoop@gmail.com';
+            gmailPagos = d.gmailPagos || 'calvoe847@gmail.com';
+            gmailTodo = d.gmailTodo || 'usototal057@gmail.com';
+        } catch(e) {}
+    }
+    applyTheme();
+    updateSwitches();
+    updateProviderUI();
+    updateMailDisplay();
+    document.getElementById('gmailCodigos').value = gmailCodigos;
+    document.getElementById('gmailPagos').value = gmailPagos;
+    document.getElementById('gmailTodo').value = gmailTodo;
+    updateStats();
+    startCountdown();
+    startAutoCheck();
+    if(currentEmail) startAutoCheck();
+    renderCurrentTab();
+}
+
+function updateProviderUI() {
+    document.querySelectorAll('.provider-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.provider === currentProvider);
+    });
+}
+function updateMailDisplay() { document.getElementById('emailVisual').innerText = currentEmail || '⚡ Selecciona un proveedor'; }
+function updateSwitches() {
+    document.getElementById('autoArchiveSwitchSm')?.classList.toggle('active', autoArchive);
+    document.getElementById('telegramSwitchSm')?.classList.toggle('active', telegramEnabled);
+    document.getElementById('autoGmailSwitchSm')?.classList.toggle('active', autoGmailEnabled);
+    document.getElementById('themeSwitchSm')?.classList.toggle('active', darkMode);
+    document.getElementById('expirationAlertSwitchSm')?.classList.toggle('active', expirationAlert);
+    document.getElementById('notifSwitchSm')?.classList.toggle('active', notificationsEnabled);
+    document.getElementById('soundSwitchSm')?.classList.toggle('active', soundEnabled);
+    document.getElementById('autoCopySwitchSm')?.classList.toggle('active', autoCopyCode);
+    document.getElementById('autoBackupSwitchSm')?.classList.toggle('active', autoBackupEnabled);
+}
+function applyTheme() { document.body.classList.toggle('light-mode', darkMode); }
+function toggleTheme() { darkMode = !darkMode; applyTheme(); updateSwitches(); saveData(); showToast(darkMode ? 'Modo oscuro' : 'Modo claro'); }
+function toggleAutoArchive() { autoArchive = !autoArchive; updateSwitches(); saveData(); showToast(autoArchive ? 'Archivado auto ON' : 'OFF'); }
+function toggleTelegram() { telegramEnabled = !telegramEnabled; updateSwitches(); saveData(); showToast(telegramEnabled ? 'Telegram ON' : 'OFF'); }
+function toggleAutoGmail() { autoGmailEnabled = !autoGmailEnabled; updateSwitches(); saveData(); showToast(autoGmailEnabled ? 'Envío a Gmail ON' : 'OFF'); }
+function toggleExpirationAlert() { expirationAlert = !expirationAlert; updateSwitches(); saveData(); }
+function toggleNotifications() { notificationsEnabled = !notificationsEnabled; updateSwitches(); saveData(); showToast(notificationsEnabled ? 'Notificaciones ON' : 'OFF'); if(notificationsEnabled && Notification.permission === 'default') Notification.requestPermission(); }
+function toggleSound() { soundEnabled = !soundEnabled; updateSwitches(); saveData(); showToast(soundEnabled ? 'Sonido ON' : 'OFF'); }
+function toggleAutoCopy() { autoCopyCode = !autoCopyCode; updateSwitches(); saveData(); showToast(autoCopyCode ? 'Auto-copiar ON' : 'OFF'); }
+function toggleAutoBackup() { autoBackupEnabled = !autoBackupEnabled; updateSwitches(); saveData(); showToast(autoBackupEnabled ? 'Respaldo automático ON' : 'OFF'); }
+function updateGmails() {
+    let n1 = document.getElementById('gmailCodigos').value.trim();
+    let n2 = document.getElementById('gmailPagos').value.trim();
+    let n3 = document.getElementById('gmailTodo').value.trim();
+    if(n1 && n1.includes('@')) gmailCodigos = n1;
+    if(n2 && n2.includes('@')) gmailPagos = n2;
+    if(n3 && n3.includes('@')) gmailTodo = n3;
+    saveData();
+    showToast(`✅ Gmails actualizados`);
+}
+
+function updateStats() {
+    let total = archived.length + inbox.length + deadZone.length;
+    let codes = 0;
+    [...archived, ...inbox, ...deadZone].forEach(e => { if(e.code) codes++; });
+    document.getElementById('totalEmails').innerText = total;
+    document.getElementById('totalCodes').innerText = codes;
+    document.getElementById('totalTelegram').innerText = telegramCount;
+    document.getElementById('totalReenviados').innerText = gmailCount;
+    document.getElementById('countArchived').innerText = archived.length;
+    document.getElementById('countInbox').innerText = inbox.length;
+    document.getElementById('countDead').innerText = deadZone.length;
+}
+
+function startCountdown() {
+    if(countdownInterval) clearInterval(countdownInterval);
+    if(!emailCreatedAt || !currentEmail) { document.getElementById('timerBox').style.display = 'none'; return; }
+    document.getElementById('timerBox').style.display = 'block';
+    let expiryHours = providerExpiry[currentProvider] || 24;
+    function update() {
+        let elapsed = (Date.now() - emailCreatedAt) / 3600000;
+        let left = expiryHours - elapsed;
+        let percent = Math.max(0, (left / expiryHours) * 100);
+        document.getElementById('expireFill').style.width = (100 - percent) + '%';
+        if(left <= 0) {
+            document.getElementById('countdownTimer').innerText = 'EXPIRADO';
+            document.getElementById('expirationWarning').style.display = 'block';
+            return;
+        }
+        let hours = Math.floor(left);
+        let minutes = Math.floor((left % 1) * 60);
+        let seconds = Math.floor(((left % 1) * 60 % 1) * 60);
+        document.getElementById('countdownTimer').innerText = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+        if(left < 2 && expirationAlert) document.getElementById('expirationWarning').style.display = 'block';
+        else document.getElementById('expirationWarning').style.display = 'none';
+    }
+    update();
+    countdownInterval = setInterval(update, 1000);
+}
+
+async function sendToTelegram(code, from, subject, body = '', tipo = 'general') {
+    if(!telegramEnabled) return false;
+    let truncatedBody = body ? body.substring(0, 500) : '';
+    let bodyText = truncatedBody ? `\n\n📝 *MENSAJE:*\n${truncatedBody}` : '';
+    let message = `🦂 *NUEVO CORREO - LUIS R*\n\n📨 *De:* ${from}\n📧 *Asunto:* ${subject}\n📅 *Fecha:* ${new Date().toLocaleString()}\n📡 *Proveedor:* ${providerNames[currentProvider]}\n📧 *Correo:* ${currentEmail}${bodyText}`;
+    if(code) message = `🦂 *NUEVO CÓDIGO - LUIS R*\n\n🔐 *Código:* \`${code}\`\n📨 *De:* ${from}\n📧 *Asunto:* ${subject}\n📅 *Fecha:* ${new Date().toLocaleString()}\n📡 *Proveedor:* ${providerNames[currentProvider]}\n📧 *Correo:* ${currentEmail}${bodyText}`;
+    let replyMarkup = { inline_keyboard: [[{ text: "📋 Copiar código", callback_data: `copy_${code || ''}` }]] };
+    try {
+        let res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'Markdown', reply_markup: code ? replyMarkup : undefined })
+        });
+        if(res.ok) { telegramCount++; saveData(); showToast(`📱 Mensaje enviado a Telegram`); return true; }
+    } catch(e) {}
+    return false;
+}
+
+async function enviarAGmail(email, emailId) {
+    if(!autoGmailEnabled) return false;
+    let clasificacion = clasificarCorreo(email.from, email.subject, email.body, email.code);
+    let destino = clasificacion.email;
+    let tipoTexto = clasificacion.tipo === 'codigo' ? '🔐 CÓDIGO' : (clasificacion.tipo === 'pago' ? '💰 PAGO' : '📦 GENERAL');
+    let mensaje = `${tipoTexto} - REENVIADO DESDE LUIS R\n\n📨 De: ${email.from}\n📧 Asunto: ${email.subject}\n${email.code ? `🔐 Código: ${email.code}\n` : ''}📅 Fecha: ${email.time}\n📡 Proveedor: ${providerNames[currentProvider]}\n📧 Correo temporal: ${currentEmail}\n🎯 Clasificado como: ${clasificacion.badge}\n\n📝 MENSAJE:\n${email.body.substring(0, 2000)}`;
+    try {
+        let formData = new FormData();
+        formData.append('to', destino);
+        formData.append('subject', `[LUIS R - ${clasificacion.badge}] ${email.subject}`);
+        formData.append('message', mensaje);
+        let res = await fetch(`https://formsubmit.co/ajax/${destino}`, { method: 'POST', body: formData });
+        if(res.ok) {
+            let arr = currentTab === 'inbox' ? inbox : (currentTab === 'archived' ? archived : deadZone);
+            if(arr[emailId]) arr[emailId].reenviado = true;
+            gmailCount++; saveData(); renderCurrentTab();
+            showToast(`📧 Enviado a ${clasificacion.badge}: ${destino}`);
+            return true;
+        }
+    } catch(e) { showToast('❌ Error al enviar', true); }
+    return false;
+}
+
+async function testGmail() {
+    showToast('📧 Enviando pruebas...');
+    await enviarAGmail({ from: 'verificacion@google.com', subject: 'Código de verificación 123456', body: 'Tu código es 123456', code: '123456', time: new Date().toLocaleString() }, 0);
+    setTimeout(async () => {
+        await enviarAGmail({ from: 'pagos@paypal.com', subject: 'Factura de suscripción', body: 'Se ha realizado un pago de $9.99', code: null, time: new Date().toLocaleString() }, 0);
+        showToast('✅ Pruebas enviadas a los Gmails correspondientes');
+    }, 2000);
+}
+
+async function sendStatsToTelegram() {
+    let total = archived.length + inbox.length + deadZone.length;
+    let codes = [...archived, ...inbox, ...deadZone].filter(e => e.code).length;
+    let msg = `📊 *ESTADÍSTICAS*\n📬 Total: ${total}\n🔐 Códigos: ${codes}\n📧 Enviados a Gmail: ${gmailCount}\n🤖 Telegram: ${telegramCount}`;
+    try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg, parse_mode: 'Markdown' })
+        });
+        showToast('📊 Estadísticas enviadas');
+    } catch(e) {}
+}
+
+async function sendAutoBackupToTelegram() {
+    if(!autoBackupEnabled || !telegramEnabled) return;
+    let data = { currentProvider, currentEmail, currentLogin, currentDomain, emailCreatedAt, inbox, deadZone, archived, autoArchive, telegramEnabled, autoGmailEnabled, telegramCount, gmailCount, darkMode };
+    let json = JSON.stringify(data);
+    let total = archived.length + inbox.length + deadZone.length;
+    let msg = `💾 *RESPALDO AUTOMÁTICO*\n📅 ${new Date().toLocaleString()}\n📬 ${total} correos`;
+    try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg, parse_mode: 'Markdown' })
+        });
+        let formData = new FormData();
+        formData.append('chat_id', TELEGRAM_CHAT_ID);
+        formData.append('document', new Blob([json], {type: 'application/json'}), `respaldo_${new Date().toISOString().slice(0,19)}.json`);
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument`, { method: 'POST', body: formData });
+        lastBackupDate = Date.now(); saveData(); showToast('💾 Respaldo automático enviado');
+    } catch(e) {}
+}
+
+async function testTelegram() {
+    showToast('📱 Enviando prueba...');
+    try {
+        let res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: '🦂 *PRUEBA EXITOSA*\\n✅ Bot configurado', parse_mode: 'Markdown' })
+        });
+        if(res.ok) showToast('✅ Prueba enviada');
+        else showToast('❌ Error', true);
+    } catch(e) { showToast('❌ Error', true); }
+}
+
+async function generateEmail() {
+    showToast(`🔄 Generando ${providerNames[currentProvider]}...`);
+    try {
+        if(currentProvider === '1secmail') {
+            let chars='abcdefghijklmnopqrstuvwxyz0123456789',n='';for(let i=0;i<12;i++)n+=chars[Math.floor(Math.random()*chars.length)];
+            currentLogin=n;currentDomain='1secmail.com';currentEmail=`${currentLogin}@${currentDomain}`;emailCreatedAt=Date.now();inbox=[];deadZone=[];archived=[];
+        }
+        else if(currentProvider === 'mailtm') {
+            let res=await fetch('https://api.mail.tm/accounts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address:`user${Math.floor(Math.random()*100000)}@mail.tm`,password:'temp123'})});
+            let data=await res.json();
+            if(data.address){currentEmail=data.address;currentLogin=data.address.split('@')[0];currentDomain='mail.tm';emailCreatedAt=Date.now();inbox=[];deadZone=[];archived=[];mailtmToken=data.token;}
+            else throw new Error();
+        }
+        else if(currentProvider === 'guerrilla') {
+            let res=await fetch('https://api.guerrillamail.com/ajax.php?f=get_email_address&lang=en');
+            let data=await res.json();
+            if(data.email_addr){currentEmail=data.email_addr;currentLogin=data.email_addr.split('@')[0];currentDomain=data.email_addr.split('@')[1];emailCreatedAt=Date.now();inbox=[];deadZone=[];archived=[];guerrillaSession=data.sid_token;}
+            else throw new Error();
+        }
+        saveData(); updateMailDisplay(); startCountdown(); startAutoCheck(); showToast(`✅ ${currentEmail}`);
+    } catch(e) { showToast(`❌ Error, reintentando...`, true); setTimeout(() => generateEmail(), 2000); }
+}
+
+async function checkInbox() {
+    if(!currentLogin || !currentDomain) return;
+    try {
+        let messages = [];
+        if(currentProvider === '1secmail') {
+            let res=await fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${currentDomain}`);
+            messages=await res.json();
+        } else if(currentProvider === 'mailtm') {
+            let token=mailtmToken||localStorage.getItem('mailtm_token');
+            if(token){let res=await fetch('https://api.mail.tm/messages',{headers:{'Authorization':`Bearer ${token}`}});let data=await res.json();messages=data['hydra:member']||[];}
+        } else if(currentProvider === 'guerrilla') {
+            if(guerrillaSession){let res=await fetch(`https://api.guerrillamail.com/ajax.php?f=get_email_list&sid_token=${guerrillaSession}&lang=en`);let data=await res.json();messages=data.list||[];}
+        }
+        if(messages?.length){
+            let existingIds=new Set([...inbox.map(m=>m.id),...archived.map(m=>m.id)]);
+            let newMessages=messages.filter(m=>!existingIds.has(m.id));
+            for(let msg of newMessages){
+                let fullMsg=null;
+                if(currentProvider==='1secmail'){let res=await fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${currentLogin}&domain=${currentDomain}&id=${msg.id}`);fullMsg=await res.json();}
+                else if(currentProvider==='mailtm'){let token=mailtmToken||localStorage.getItem('mailtm_token');let res=await fetch(`https://api.mail.tm/messages/${msg.id}`,{headers:{'Authorization':`Bearer ${token}`}});fullMsg=await res.json();}
+                else if(currentProvider==='guerrilla'){let res=await fetch(`https://api.guerrillamail.com/ajax.php?f=fetch_email&sid_token=${guerrillaSession}&email_id=${msg.mail_id}&lang=en`);let data=await res.json();fullMsg={from:data.mail_from,subject:data.mail_subject,textBody:data.mail_body};}
+                if(fullMsg){
+                    let bodyText=fullMsg.textBody||fullMsg.htmlBody||'';
+                    let codeMatch=bodyText.match(/\b\d{4,8}\b/);
+                    let emailObj={id:msg.id,from:fullMsg.from||'Desconocido',subject:fullMsg.subject||'Sin asunto',body:bodyText.substring(0,5000),code:codeMatch?codeMatch[0]:null,time:new Date().toLocaleString(),date:new Date().toISOString(),fav:false,reenviado:false};
+                    let clasificacion = clasificarCorreo(emailObj.from, emailObj.subject, emailObj.body, emailObj.code);
+                    emailObj.tipo = clasificacion.tipo; emailObj.badge = clasificacion.badge;
+                    if(autoArchive) archived.unshift(emailObj);
+                    else inbox.unshift(emailObj);
+                    if(autoGmailEnabled) await enviarAGmail(emailObj, 0);
+                    if(emailObj.code){
+                        if(telegramEnabled) await sendToTelegram(emailObj.code, emailObj.from, emailObj.subject, emailObj.body, emailObj.tipo);
+                        notifyUser("🔐 Nuevo código", `${emailObj.code} de ${emailObj.from}`);
+                        playBeep(); showToast(`🔐 CÓDIGO: ${emailObj.code}`);
+                        if(autoCopyCode) { navigator.clipboard.writeText(emailObj.code); showToast(`📋 Código copiado`); }
+                    } else {
+                        if(telegramEnabled) await sendToTelegram(null, emailObj.from, emailObj.subject, emailObj.body, emailObj.tipo);
+                        playBeep(); showToast(`📧 Correo recibido: ${emailObj.subject.substring(0,30)}`);
+                    }
+                }
+            }
+            if(newMessages.length>0){saveData();renderCurrentTab();}
+        }
+    } catch(e){}
+    updateStats();
+}
+
+function startAutoCheck(){if(autoCheckInterval)clearInterval(autoCheckInterval);autoCheckInterval=setInterval(()=>checkInbox(),15000);}
+function copyEmail(){if(!currentEmail){showToast('Genera un correo',true);return;}navigator.clipboard.writeText(currentEmail);showCopySuccess();}
+async function manualRefresh(){showToast('🔄 Refrescando...');await checkInbox();showToast('✅ Actualizado');}
+
+function getCurrentItems() {
+    let items = [];
+    if(currentTab === 'inbox') items = [...inbox];
+    else if(currentTab === 'archived') items = [...archived];
+    else items = [...deadZone];
+    if(searchTerm) items = items.filter(e => e.from?.toLowerCase().includes(searchTerm) || e.subject?.toLowerCase().includes(searchTerm) || e.code?.toLowerCase().includes(searchTerm));
+    return items;
+}
+
+function renderCurrentTab() {
+    let allItems = getCurrentItems();
+    let totalPages = Math.ceil(allItems.length / ITEMS_PER_PAGE);
+    if(currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+    if(currentPage < 1) currentPage = 1;
+    let start = (currentPage - 1) * ITEMS_PER_PAGE;
+    let pageItems = allItems.slice(start, start + ITEMS_PER_PAGE);
+    let container = document.getElementById('inboxContainer');
+    if(pageItems.length === 0) { container.innerHTML = '<div class="empty">📭 Vacío</div>'; document.getElementById('paginationContainer').style.display = 'none'; return; }
+    container.innerHTML = pageItems.map((e, idx) => {
+        let badgeClass = e.tipo === 'codigo' ? 'badge-code' : (e.tipo === 'pago' ? 'badge-pago' : 'badge-total');
+        return `<div class="msg-item" onclick="viewEmail(${start + idx})">
+            <div class="msg-from">📨 ${escapeHtml(e.from)} <span class="msg-badge ${badgeClass}">${e.badge || '📦 General'}</span>${e.reenviado ? '<span class="msg-badge" style="background:#c5221f">📧 Enviado</span>' : ''}</div>
+            <div class="msg-subject">${escapeHtml(e.subject)}</div>
+            ${e.code ? `<div class="msg-code">🔐 ${e.code}</div>` : ''}
+            <div class="msg-time">⏰ ${e.time} ${e.fav ? '⭐' : ''}</div>
+            <div class="msg-actions" onclick="event.stopPropagation()">
+                <button class="action-btn" onclick="toggleFav(${start + idx})">${e.fav ? '⭐ Quitar' : '☆ Favorito'}</button>
+                ${!e.reenviado ? `<button class="action-btn gmail" onclick="enviarAMano(${start + idx})">📧 Enviar a Gmail</button>` : ''}
+                <button class="action-btn danger" onclick="deleteItem(${start + idx})">🗑️ Eliminar</button>
+                ${currentTab !== 'dead' ? `<button class="action-btn" onclick="moveToDead(${start + idx})">📦 Papelera</button>` : `<button class="action-btn success" onclick="recoverItem(${start + idx})">↩️ Recuperar</button>`}
+            </div>
+        </div>`;
+    }).join('');
+    let pagContainer = document.getElementById('paginationContainer');
+    if(totalPages > 1) {
+        pagContainer.style.display = 'flex';
+        document.getElementById('pageInfo').innerText = `Página ${currentPage} de ${totalPages}`;
+        document.getElementById('prevPageBtn').disabled = currentPage === 1;
+        document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+    } else { pagContainer.style.display = 'none'; }
+}
+
+function goPrevPage() { if(currentPage > 1) { currentPage--; renderCurrentTab(); } }
+function goNextPage() { let total = Math.ceil(getCurrentItems().length / ITEMS_PER_PAGE); if(currentPage < total) { currentPage++; renderCurrentTab(); } }
+window.viewEmail = function(idx) { let all = getCurrentItems(); let e = all[idx]; if(!e) return; alert(`📧 DE: ${e.from}\n📧 ASUNTO: ${e.subject}\n${e.code ? `🔐 CÓDIGO: ${e.code}` : ''}\n🎯 ${e.badge || 'General'}\n\n📝 MENSAJE:\n${e.body?.substring(0,500)}`); if(e.code) navigator.clipboard.writeText(e.code); }
+window.toggleFav = function(idx) { let all = getCurrentItems(); let e = all[idx]; if(e) { e.fav = !e.fav; saveData(); renderCurrentTab(); } }
+window.enviarAMano = async function(idx) { let all = getCurrentItems(); let e = all[idx]; if(e) { showToast('📧 Enviando...'); await enviarAGmail(e, idx); } }
+window.deleteItem = function(idx) { showConfirmModal('¿Eliminar este correo?', () => { let pin = prompt('🔐 PIN:'); if(pin !== PIN) { showToast('PIN incorrecto', true); return; } let arr = currentTab === 'inbox' ? inbox : (currentTab === 'archived' ? archived : deadZone); let realIdx = getCurrentItems().findIndex((e,i) => i === idx); if(realIdx !== -1) arr.splice(realIdx,1); saveData(); renderCurrentTab(); showToast('🗑️ Eliminado'); }); }
+window.moveToDead = function(idx) { let arr = currentTab === 'inbox' ? inbox : archived; let all = getCurrentItems(); let e = all[idx]; if(e) { let realIdx = arr.findIndex(item => item.id === e.id); if(realIdx !== -1) { arr.splice(realIdx,1); deadZone.unshift(e); saveData(); renderCurrentTab(); showToast('📦 Movido a papelera'); } } }
+window.recoverItem = function(idx) { let all = getCurrentItems(); let e = all[idx]; if(e) { let realIdx = deadZone.findIndex(item => item.id === e.id); if(realIdx !== -1) { deadZone.splice(realIdx,1); inbox.unshift(e); saveData(); renderCurrentTab(); showToast('↩️ Recuperado'); } } }
+function changeTab(tab) { currentTab = tab; currentPage = 1; document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active'); renderCurrentTab(); }
+function updateSearch() { searchTerm = document.getElementById('searchInputSm').value.toLowerCase(); currentPage = 1; renderCurrentTab(); }
+
+function exportJson(){ let data={currentProvider,currentEmail,currentLogin,currentDomain,emailCreatedAt,inbox,deadZone,archived,autoArchive,telegramEnabled,autoGmailEnabled,telegramCount,gmailCount,darkMode,expirationAlert,notificationsEnabled,soundEnabled,autoCopyCode,guerrillaSession,mailtmToken,gmailCodigos,gmailPagos,gmailTodo}; let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'})); a.download=`respaldo_${new Date().toISOString().slice(0,19)}.json`; a.click(); showToast('✅ Exportado'); }
+function exportCsv(){ let all=[...archived,...inbox,...deadZone]; if(all.length===0){showToast('No hay datos',true);return;} let csv=[["Fecha","Remitente","Asunto","Código","Clasificación"]]; all.forEach(m=>{csv.push([m.time,m.from,m.subject,m.code||'',m.badge||'General']);}); let blob=new Blob(["\uFEFF"+csv.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n')],{type:'text/csv'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`codigos_${new Date().toISOString().slice(0,19)}.csv`; a.click(); showToast('✅ CSV exportado'); }
+function showImportModal(){document.getElementById('importModal').style.display='flex';}
+function closeImportModal(){document.getElementById('importModal').style.display='none';}
+function importData(){ try{ let d=JSON.parse(document.getElementById('importJsonData').value); currentProvider=d.currentProvider||'1secmail'; currentEmail=d.currentEmail||''; currentLogin=d.currentLogin||''; currentDomain=d.currentDomain||''; emailCreatedAt=d.emailCreatedAt||null; inbox=d.inbox||[]; deadZone=d.deadZone||[]; archived=d.archived||[]; autoArchive=d.autoArchive!==undefined?d.autoArchive:true; telegramEnabled=d.telegramEnabled!==undefined?d.telegramEnabled:true; autoGmailEnabled=d.autoGmailEnabled!==undefined?d.autoGmailEnabled:true; telegramCount=d.telegramCount||0; gmailCount=d.gmailCount||0; darkMode=d.darkMode||false; expirationAlert=d.expirationAlert!==undefined?d.expirationAlert:true; notificationsEnabled=d.notificationsEnabled||false; soundEnabled=d.soundEnabled||false; autoCopyCode=d.autoCopyCode!==undefined?d.autoCopyCode:true; guerrillaSession=d.guerrillaSession||null; mailtmToken=d.mailtmToken||null; gmailCodigos=d.gmailCodigos||'manzaxxoop@gmail.com'; gmailPagos=d.gmailPagos||'calvoe847@gmail.com'; gmailTodo=d.gmailTodo||'usototal057@gmail.com'; saveData(); applyTheme(); updateSwitches(); updateProviderUI(); updateMailDisplay(); startCountdown(); startAutoCheck(); renderCurrentTab(); showToast('✅ Restaurado'); closeImportModal(); }catch(e){showToast('❌ JSON inválido',true);} }
+function restorePreviousEmail(){ let pin=prompt('🔐 PIN:'); if(pin!==PIN){showToast('PIN incorrecto',true);return;} let history=JSON.parse(localStorage.getItem('luisr_email_history')||'[]'); if(history.length===0){showToast('No hay historial',true);return;} let last=history[history.length-1]; currentEmail=last.email; currentLogin=last.login; currentDomain=last.domain; emailCreatedAt=last.createdAt; inbox=last.inbox||[]; deadZone=last.deadZone||[]; archived=last.archived||[]; saveData(); updateMailDisplay(); renderCurrentTab(); startCountdown(); startAutoCheck(); showToast(`📧 Recuperado: ${currentEmail}`); }
+function clearAllData(){ showConfirmModal('¿Borrar TODOS los datos?',()=>{ let pin=prompt('🔐 PIN:'); if(pin!==PIN){showToast('PIN incorrecto',true);return;} localStorage.removeItem(STORAGE_KEY); location.reload(); }); }
+function setupBackupEndpoint(){ if(window.location.search.includes('backup=1')||window.location.pathname.includes('/api/backup')){ setTimeout(async()=>{ let result={success:true,message:'Respaldo ejecutado',date:new Date().toISOString()}; if(telegramEnabled&&autoBackupEnabled) await sendAutoBackupToTelegram(); document.body.innerHTML=`<pre style="color:#eab308;background:#0a0e1a;padding:20px;text-align:center">${JSON.stringify(result,null,2)}</pre>`; },100); return true; } return false; }
+
+document.addEventListener('DOMContentLoaded', () => {
+    if(setupBackupEndpoint()) return;
+    loadData();
+    document.querySelectorAll('.provider-btn').forEach(btn=>{btn.onclick=()=>{currentProvider=btn.dataset.provider;updateProviderUI();updateMailDisplay();saveData();showToast(`📡 ${providerNames[currentProvider]}`);};});
+    document.getElementById('genBtn').onclick=generateEmail;
+    document.getElementById('copyBtn').onclick=copyEmail;
+    document.getElementById('refreshBtn').onclick=manualRefresh;
+    document.getElementById('migrationBtn').onclick=()=>document.getElementById('migrationModal').style.display='flex';
+    document.getElementById('closeMigrationModal').onclick=()=>document.getElementById('migrationModal').style.display='none';
+    document.getElementById('confirmMigrationBtn').onclick=()=>{ let newEmail=document.getElementById('migrationNewEmail').value; if(!newEmail){showToast('Ingresa correo',true);return;} let pin=prompt('🔐 PIN:'); if(pin!==PIN){showToast('PIN incorrecto',true);return;} alert(`✅ Migración sugerida a: ${newEmail}`); document.getElementById('migrationModal').style.display='none'; showToast('✅ Migración registrada'); };
+    document.getElementById('gearBtn').onclick=()=>document.getElementById('settingsPanel').classList.toggle('show');
+    document.getElementById('telegramSwitchSm').onclick=toggleTelegram;
+    document.getElementById('autoGmailSwitchSm').onclick=toggleAutoGmail;
+    document.getElementById('autoArchiveSwitchSm').onclick=toggleAutoArchive;
+    document.getElementById('themeSwitchSm').onclick=toggleTheme;
+    document.getElementById('expirationAlertSwitchSm').onclick=toggleExpirationAlert;
+    document.getElementById('notifSwitchSm').onclick=toggleNotifications;
+    document.getElementById('soundSwitchSm').onclick=toggleSound;
+    document.getElementById('autoCopySwitchSm').onclick=toggleAutoCopy;
+    document.getElementById('autoBackupSwitchSm').onclick=toggleAutoBackup;
+    document.getElementById('updateGmailBtn').onclick=updateGmails;
+    document.getElementById('exportJsonBtn').onclick=exportJson;
+    document.getElementById('exportCsvBtn').onclick=exportCsv;
+    document.getElementById('importBackupBtn').onclick=showImportModal;
+    document.getElementById('restorePrevEmailBtn').onclick=restorePreviousEmail;
+    document.getElementById('testTelegramBtnSm').onclick=testTelegram;
+    document.getElementById('testGmailBtnSm').onclick=testGmail;
+    document.getElementById('sendStatsBtn').onclick=sendStatsToTelegram;
+    document.getElementById('clearAllBtnSm').onclick=clearAllData;
+    document.getElementById('confirmImportBtn').onclick=importData;
+    document.getElementById('closeImportModal').onclick=closeImportModal;
+    document.getElementById('searchInputSm').addEventListener('input',updateSearch);
+    document.querySelectorAll('.tab').forEach(t=>{t.onclick=()=>changeTab(t.dataset.tab);});
+    document.getElementById('prevPageBtn').onclick=goPrevPage;
+    document.getElementById('nextPageBtn').onclick=goNextPage;
+    window.addEventListener('click',(e)=>{ if(!document.getElementById('settingsPanel').contains(e.target)&&e.target!==document.getElementById('gearBtn')) document.getElementById('settingsPanel').classList.remove('show'); });
+    if(currentEmail){ let history=JSON.parse(localStorage.getItem('luisr_email_history')||'[]'); history.push({email:currentEmail,login:currentLogin,domain:currentDomain,createdAt:emailCreatedAt,inbox,deadZone,archived}); if(history.length>10)history.shift(); localStorage.setItem('luisr_email_history',JSON.stringify(history)); }
+});
+</script>
+</body>
+</html>
