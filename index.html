@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>LUIS R | CORREOS ETERNOS</title>
+<title>LUIS R | CORREOS ETERNOS PWA</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#eab308">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LuisR Mail">
+<link rel="apple-touch-icon" href="https://luisr-correos.onrender.com/icon-192.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e1a;color:#e2e8f0;padding:16px;transition:background 0.3s}
@@ -107,7 +113,7 @@ hr{margin:10px 0;border-color:#1e293b}
 <span class="glow-item luis-text">LUIS R</span>
 <span class="glow-item scorpion-glow">🦂</span>
 </div>
-<div class="sub">⚡ 3 PROVEEDORES · CLASIFICACIÓN INTELIGENTE · 3 GMAILS · TELEGRAM ⚡</div>
+<div class="sub">⚡ PWA · 3 PROVEEDORES · CLASIFICACIÓN INTELIGENTE · 3 GMAILS · TELEGRAM ⚡</div>
 </div>
 
 <div class="stats-grid">
@@ -142,7 +148,6 @@ hr{margin:10px 0;border-color:#1e293b}
 <button class="btn btn-secondary" id="copyBtn">📋 COPIAR</button>
 <button class="btn btn-secondary" id="refreshBtn" title="Refrescar">🔄</button>
 </div>
-<button class="btn btn-telegram" id="migrationBtn">🔄 ASISTENTE DE MIGRACIÓN</button>
 </div>
 
 <div class="card">
@@ -158,7 +163,7 @@ hr{margin:10px 0;border-color:#1e293b}
 <button id="nextPageBtn">Siguiente ▶</button>
 </div>
 </div>
-<footer>🔐 PIN 1515 · Clasificación automática a 3 Gmails · Respaldo local</footer>
+<footer>🔐 PIN 1515 · Clasificación automática a 3 Gmails · PWA instalable</footer>
 </div>
 
 <div class="toolbar">
@@ -195,14 +200,13 @@ hr{margin:10px 0;border-color:#1e293b}
 </div>
 
 <div id="importModal" class="modal"><div class="modal-content"><h3>Recuperar respaldo</h3><textarea id="importJsonData" rows="5" placeholder="Pega aquí el JSON..."></textarea><button class="btn btn-primary" id="confirmImportBtn">Restaurar</button><button class="btn btn-secondary" id="closeImportModal">Cancelar</button></div></div>
-<div id="migrationModal" class="modal"><div class="modal-content"><h3>🔄 Asistente de Migración</h3><input type="email" id="migrationNewEmail" placeholder="nuevo@correo.com" value="usototal057@gmail.com"><button class="btn btn-primary" id="confirmMigrationBtn">Migrar</button><button class="btn btn-secondary" id="closeMigrationModal">Cancelar</button></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
 const TELEGRAM_TOKEN = '8708803857:AAHsIF_AbBuM_GPam1MWYBBRFycRSWAA4Cs';
 const TELEGRAM_CHAT_ID = '1183299436';
 const PIN = '1515';
-const STORAGE_KEY = 'luisr_final_v1';
+const STORAGE_KEY = 'luisr_pwa_v1';
 const ITEMS_PER_PAGE = 20;
 
 let currentProvider = '1secmail';
@@ -607,6 +611,8 @@ function restorePreviousEmail(){ let pin=prompt('🔐 PIN:'); if(pin!==PIN){show
 function clearAllData(){ showConfirmModal('¿Borrar TODOS los datos?',()=>{ let pin=prompt('🔐 PIN:'); if(pin!==PIN){showToast('PIN incorrecto',true);return;} localStorage.removeItem(STORAGE_KEY); location.reload(); }); }
 function setupBackupEndpoint(){ if(window.location.search.includes('backup=1')||window.location.pathname.includes('/api/backup')){ setTimeout(async()=>{ let result={success:true,message:'Respaldo ejecutado',date:new Date().toISOString()}; if(telegramEnabled&&autoBackupEnabled) await sendAutoBackupToTelegram(); document.body.innerHTML=`<pre style="color:#eab308;background:#0a0e1a;padding:20px;text-align:center">${JSON.stringify(result,null,2)}</pre>`; },100); return true; } return false; }
 
+if('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registrado')).catch(err => console.log('SW error:', err)); }
+
 document.addEventListener('DOMContentLoaded', () => {
     if(setupBackupEndpoint()) return;
     loadData();
@@ -614,9 +620,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('genBtn').onclick=generateEmail;
     document.getElementById('copyBtn').onclick=copyEmail;
     document.getElementById('refreshBtn').onclick=manualRefresh;
-    document.getElementById('migrationBtn').onclick=()=>document.getElementById('migrationModal').style.display='flex';
-    document.getElementById('closeMigrationModal').onclick=()=>document.getElementById('migrationModal').style.display='none';
-    document.getElementById('confirmMigrationBtn').onclick=()=>{ let newEmail=document.getElementById('migrationNewEmail').value; if(!newEmail){showToast('Ingresa correo',true);return;} let pin=prompt('🔐 PIN:'); if(pin!==PIN){showToast('PIN incorrecto',true);return;} alert(`✅ Migración sugerida a: ${newEmail}`); document.getElementById('migrationModal').style.display='none'; showToast('✅ Migración registrada'); };
     document.getElementById('gearBtn').onclick=()=>document.getElementById('settingsPanel').classList.toggle('show');
     document.getElementById('telegramSwitchSm').onclick=toggleTelegram;
     document.getElementById('autoGmailSwitchSm').onclick=toggleAutoGmail;
