@@ -611,7 +611,7 @@ function restorePreviousEmail(){ let pin=prompt('🔐 PIN:'); if(pin!==PIN){show
 function clearAllData(){ showConfirmModal('¿Borrar TODOS los datos?',()=>{ let pin=prompt('🔐 PIN:'); if(pin!==PIN){showToast('PIN incorrecto',true);return;} localStorage.removeItem(STORAGE_KEY); location.reload(); }); }
 function setupBackupEndpoint(){ if(window.location.search.includes('backup=1')||window.location.pathname.includes('/api/backup')){ setTimeout(async()=>{ let result={success:true,message:'Respaldo ejecutado',date:new Date().toISOString()}; if(telegramEnabled&&autoBackupEnabled) await sendAutoBackupToTelegram(); document.body.innerHTML=`<pre style="color:#eab308;background:#0a0e1a;padding:20px;text-align:center">${JSON.stringify(result,null,2)}</pre>`; },100); return true; } return false; }
 
-if('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registrado')).catch(err => console.log('SW error:', err)); }
+if('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-worker.js').then(reg => console.log('SW registrado')).catch(err => console.log('SW error:', err)); }
 
 document.addEventListener('DOMContentLoaded', () => {
     if(setupBackupEndpoint()) return;
