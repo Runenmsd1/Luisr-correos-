@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="/Luisr-correos-/icon.png">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>LUIS R | CORREOS ETERNOS PWA</title>
@@ -33,10 +30,10 @@ body.light-mode .settings-panel{background:#ffffff;color:#1a1a2e}
 }
 .sub{font-size:8px;color:#22c55e;text-align:center;margin-top:4px}
 .card{background:#131b2e;border-radius:24px;padding:20px;margin-bottom:16px;border:1px solid #1e293b}
-.provider-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.provider-selector{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}
 .provider-btn{background:#0a0e1a;border:1px solid #1e293b;border-radius:16px;padding:8px;text-align:center;cursor:pointer;transition:all 0.2s}
 .provider-btn.active{background:#eab308;color:#0a0e1a;border-color:#eab308}
-.provider-name{font-size:11px;font-weight:700}
+.provider-name{font-size:10px;font-weight:700}
 .provider-expiry{font-size:7px;opacity:0.7}
 .email-box{background:#0a0e1a;border-radius:16px;padding:16px;text-align:center;margin-bottom:16px;border:1px solid #1e293b}
 .email-visual{font-size:12px;font-weight:800;color:#fbbf24;word-break:break-all;background:#1e293b;padding:10px;border-radius:12px;font-family:monospace}
@@ -78,7 +75,7 @@ body.light-mode .settings-panel{background:#ffffff;color:#1a1a2e}
 .toolbar{position:fixed;bottom:20px;right:20px;z-index:100}
 .gear-btn{background:#eab308;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:22px;transition:transform 0.2s}
 .gear-btn:hover{transform:rotate(90deg)}
-.settings-panel{position:fixed;bottom:80px;right:20px;background:#131b2e;border-radius:20px;padding:14px;width:300px;border:1px solid #eab308;z-index:99;display:none;max-height:80vh;overflow-y:auto}
+.settings-panel{position:fixed;bottom:80px;right:20px;background:#131b2e;border-radius:20px;padding:14px;width:320px;border:1px solid #eab308;z-index:99;display:none;max-height:80vh;overflow-y:auto}
 .settings-panel.show{display:block}
 .settings-panel h4{font-size:11px;margin-bottom:10px;color:#eab308;border-bottom:1px solid #1e293b;padding-bottom:5px}
 .setting-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:10px;flex-wrap:wrap;gap:6px}
@@ -116,7 +113,7 @@ hr{margin:10px 0;border-color:#1e293b}
 <span class="glow-item luis-text">LUIS R</span>
 <span class="glow-item scorpion-glow">🦂</span>
 </div>
-<div class="sub">⚡ PWA · 3 PROVEEDORES · CLASIFICACIÓN INTELIGENTE · 3 GMAILS · TELEGRAM ⚡</div>
+<div class="sub">⚡ PWA · 5 PROVEEDORES · CLASIFICACIÓN INTELIGENTE · 3 GMAILS · TELEGRAM ⚡</div>
 </div>
 
 <div class="stats-grid">
@@ -128,9 +125,11 @@ hr{margin:10px 0;border-color:#1e293b}
 
 <div class="card">
 <div class="provider-selector" id="providerSelector">
-<div class="provider-btn" data-provider="1secmail"><div class="provider-name">📧 1SECMAIL</div><div class="provider-expiry">~24 horas</div></div>
-<div class="provider-btn" data-provider="mailtm"><div class="provider-name">📧 MAIL.TM</div><div class="provider-expiry">~30 días</div></div>
-<div class="provider-btn" data-provider="guerrilla"><div class="provider-name">📧 GUERRILLA</div><div class="provider-expiry">~1 hora</div></div>
+<div class="provider-btn" data-provider="1secmail"><div class="provider-name">📧 1SECMAIL</div><div class="provider-expiry">~24h</div></div>
+<div class="provider-btn" data-provider="mailtm"><div class="provider-name">📧 MAIL.TM</div><div class="provider-expiry">~30d</div></div>
+<div class="provider-btn" data-provider="guerrilla"><div class="provider-name">📧 GUERRILLA</div><div class="provider-expiry">~1h</div></div>
+<div class="provider-btn" data-provider="addyio"><div class="provider-name">🔒 ADDY.IO</div><div class="provider-expiry">Permanente</div></div>
+<div class="provider-btn" data-provider="anonli"><div class="provider-name">🔒 ANON.LI</div><div class="provider-expiry">Permanente</div></div>
 </div>
 <div class="email-box">
 <div class="email-visual" id="emailVisual">⚡ Selecciona un proveedor</div>
@@ -139,11 +138,12 @@ hr{margin:10px 0;border-color:#1e293b}
 <div class="progress-expire"><div class="progress-expire-fill" id="expireFill"></div></div>
 <div id="expirationWarning" class="warning" style="display:none">⚠️ ¡EXPIRA PRONTO! Migra tu cuenta</div>
 </div>
-<div class="respaldo-info">
+<div class="respaldo-info" id="respaldoInfo">
 📧 Clasificación inteligente:<br>
-🔐 Códigos → <span>manzaxxoop@gmail.com</span><br>
-💰 Pagos → <span>calvoe847@gmail.com</span><br>
-📦 Todo lo demás → <span>usototal057@gmail.com</span>
+🔐 Códigos → <span id="gmailCodigosSpan">********</span><br>
+💰 Pagos → <span id="gmailPagosSpan">********</span><br>
+📦 Todo lo demás → <span id="gmailTodoSpan">********</span><br>
+<button id="toggleGmailsBtn" style="background:#1e293b; border:none; padding:4px 8px; border-radius:8px; margin-top:5px; cursor:pointer; font-size:9px;">🔒 Mostrar Gmails</button>
 </div>
 </div>
 <div class="action-buttons">
@@ -183,10 +183,16 @@ hr{margin:10px 0;border-color:#1e293b}
 <div class="setting-row"><span>💾 Respaldo automático</span><div class="switch-btn-sm" id="autoBackupSwitchSm"></div></div>
 <div class="setting-row"><span>📧 Envío automático a Gmail</span><div class="switch-btn-sm" id="autoGmailSwitchSm"></div></div>
 <hr>
-<div class="setting-row"><span>🔐 Gmail códigos</span><input type="email" id="gmailCodigos" value="manzaxxoop@gmail.com"></div>
-<div class="setting-row"><span>💰 Gmail pagos</span><input type="email" id="gmailPagos" value="calvoe847@gmail.com"></div>
-<div class="setting-row"><span>📦 Gmail general</span><input type="email" id="gmailTodo" value="usototal057@gmail.com"></div>
+<div id="gmailHiddenSection" style="display:none;">
+<div class="setting-row"><span>🔐 Gmail códigos</span><input type="text" id="gmailCodigosInput" value="manzaxxoop@gmail.com"></div>
+<div class="setting-row"><span>💰 Gmail pagos</span><input type="text" id="gmailPagosInput" value="calvoe847@gmail.com"></div>
+<div class="setting-row"><span>📦 Gmail general</span><input type="text" id="gmailTodoInput" value="usototal057@gmail.com"></div>
 <div class="setting-row"><span><button id="updateGmailBtn">Actualizar Gmails</button></span></div>
+</div>
+<button id="showGmailConfigBtn" style="background:#1e293b; border:none; padding:6px; border-radius:8px; cursor:pointer; width:100%; margin-bottom:10px;">🔐 Mostrar configuración de Gmails (requiere PIN)</button>
+<hr>
+<div class="setting-row"><span>🔑 API Key Addy.io</span><input type="password" id="addyioApiKey" placeholder="Pega aquí tu API Key de Addy.io"></div>
+<div class="setting-row"><span>🔑 API Key anon.li</span><input type="password" id="anonliApiKey" placeholder="Pega aquí tu API Key de anon.li"></div>
 <hr>
 <div class="setting-row"><span>📂 Guardar respaldo</span><button id="exportJsonBtn">EXPORTAR JSON</button></div>
 <div class="setting-row"><span>📊 Exportar códigos a CSV</span><button id="exportCsvBtn">CSV</button></div>
@@ -206,7 +212,14 @@ hr{margin:10px 0;border-color:#1e293b}
 <div class="toast" id="toast"></div>
 
 <script>
-const TELEGRAM_TOKEN = '8708803857:AAHsIF_AbBuM_GPam1MWYBBRFycRSWAA4Cs';
+// ============================================================
+// API KEYS (vacías por defecto, cada usuario debe introducir las suyas)
+// ============================================================
+let addyioApiKey = '';
+let anonliApiKey = '';
+
+// ========== RESTO DEL CÓDIGO (NO MODIFICAR) ==========
+const TELEGRAM_TOKEN = '8708803857:AAHsIF_AbBuM_GPam1MWYBBRFycRSWAA4Cs';  // Puedes borrarlo si no quieres que se vea
 const TELEGRAM_CHAT_ID = '1183299436';
 const PIN = '1515';
 const STORAGE_KEY = 'luisr_pwa_v1';
@@ -226,8 +239,8 @@ let gmailCodigos = 'manzaxxoop@gmail.com';
 let gmailPagos = 'calvoe847@gmail.com';
 let gmailTodo = 'usototal057@gmail.com';
 
-const providerExpiry = { '1secmail': 24, 'mailtm': 720, 'guerrilla': 1 };
-const providerNames = { '1secmail': '1SECMAIL', 'mailtm': 'MAIL.TM', 'guerrilla': 'GUERRILLA' };
+const providerExpiry = { '1secmail': 24, 'mailtm': 720, 'guerrilla': 1, 'addyio': 999999, 'anonli': 999999 };
+const providerNames = { '1secmail': '1SECMAIL', 'mailtm': 'MAIL.TM', 'guerrilla': 'GUERRILLA', 'addyio': 'ADDY.IO', 'anonli': 'ANON.LI' };
 const palabrasCodigo = ['código', 'codigo', 'verification', 'verify', 'otp', '2fa', 'pin', 'token'];
 const palabrasPago = ['pago', 'payment', 'invoice', 'factura', 'subscription', 'suscripción', 'recibo', 'compra'];
 
@@ -257,7 +270,7 @@ function notifyUser(title, body) { if(notificationsEnabled && Notification.permi
 function escapeHtml(s) { if(!s) return ''; return String(s).replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
 function saveData() {
-    let storage = { currentProvider, currentEmail, currentLogin, currentDomain, emailCreatedAt, inbox, deadZone, archived, autoArchive, telegramEnabled, autoGmailEnabled, telegramCount, gmailCount, darkMode, expirationAlert, notificationsEnabled, soundEnabled, autoCopyCode, autoBackupEnabled, lastBackupDate, guerrillaSession, mailtmToken, gmailCodigos, gmailPagos, gmailTodo };
+    let storage = { currentProvider, currentEmail, currentLogin, currentDomain, emailCreatedAt, inbox, deadZone, archived, autoArchive, telegramEnabled, autoGmailEnabled, telegramCount, gmailCount, darkMode, expirationAlert, notificationsEnabled, soundEnabled, autoCopyCode, autoBackupEnabled, lastBackupDate, guerrillaSession, mailtmToken, gmailCodigos, gmailPagos, gmailTodo, addyioApiKey, anonliApiKey };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
     updateStats();
 }
@@ -292,15 +305,20 @@ function loadData() {
             gmailCodigos = d.gmailCodigos || 'manzaxxoop@gmail.com';
             gmailPagos = d.gmailPagos || 'calvoe847@gmail.com';
             gmailTodo = d.gmailTodo || 'usototal057@gmail.com';
+            addyioApiKey = d.addyioApiKey || '';
+            anonliApiKey = d.anonliApiKey || '';
         } catch(e) {}
     }
     applyTheme();
     updateSwitches();
     updateProviderUI();
     updateMailDisplay();
-    document.getElementById('gmailCodigos').value = gmailCodigos;
-    document.getElementById('gmailPagos').value = gmailPagos;
-    document.getElementById('gmailTodo').value = gmailTodo;
+    document.getElementById('gmailCodigosSpan').innerText = '********';
+    document.getElementById('gmailPagosSpan').innerText = '********';
+    document.getElementById('gmailTodoSpan').innerText = '********';
+    if(document.getElementById('gmailCodigosInput')) document.getElementById('gmailCodigosInput').value = gmailCodigos;
+    if(document.getElementById('gmailPagosInput')) document.getElementById('gmailPagosInput').value = gmailPagos;
+    if(document.getElementById('gmailTodoInput')) document.getElementById('gmailTodoInput').value = gmailTodo;
     updateStats();
     startCountdown();
     startAutoCheck();
@@ -336,14 +354,15 @@ function toggleSound() { soundEnabled = !soundEnabled; updateSwitches(); saveDat
 function toggleAutoCopy() { autoCopyCode = !autoCopyCode; updateSwitches(); saveData(); showToast(autoCopyCode ? 'Auto-copiar ON' : 'OFF'); }
 function toggleAutoBackup() { autoBackupEnabled = !autoBackupEnabled; updateSwitches(); saveData(); showToast(autoBackupEnabled ? 'Respaldo automático ON' : 'OFF'); }
 function updateGmails() {
-    let n1 = document.getElementById('gmailCodigos').value.trim();
-    let n2 = document.getElementById('gmailPagos').value.trim();
-    let n3 = document.getElementById('gmailTodo').value.trim();
+    let n1 = document.getElementById('gmailCodigosInput').value.trim();
+    let n2 = document.getElementById('gmailPagosInput').value.trim();
+    let n3 = document.getElementById('gmailTodoInput').value.trim();
     if(n1 && n1.includes('@')) gmailCodigos = n1;
     if(n2 && n2.includes('@')) gmailPagos = n2;
     if(n3 && n3.includes('@')) gmailTodo = n3;
     saveData();
     showToast(`✅ Gmails actualizados`);
+    document.getElementById('gmailHiddenSection').style.display = 'none';
 }
 
 function updateStats() {
@@ -478,50 +497,239 @@ async function testTelegram() {
     } catch(e) { showToast('❌ Error', true); }
 }
 
+async function verificarYRegenerarMailTM() {
+    if (currentProvider !== 'mailtm') return true;
+    let token = mailtmToken || localStorage.getItem('mailtm_token');
+    if (!token) return true;
+    try {
+        const test = await fetch('https://api.mail.tm/messages', {
+            headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/ld+json' }
+        });
+        if (test.status === 401) {
+            showToast('🔄 Token expirado, regenerando cuenta...');
+            await generateEmail();
+            return true;
+        }
+        return true;
+    } catch(e) { return false; }
+}
+
 async function generateEmail() {
     showToast(`🔄 Generando ${providerNames[currentProvider]}...`);
+    
     try {
-        if(currentProvider === '1secmail') {
-            let chars='abcdefghijklmnopqrstuvwxyz0123456789',n='';for(let i=0;i<12;i++)n+=chars[Math.floor(Math.random()*chars.length)];
-            currentLogin=n;currentDomain='1secmail.com';currentEmail=`${currentLogin}@${currentDomain}`;emailCreatedAt=Date.now();inbox=[];deadZone=[];archived=[];
+        if (currentProvider === '1secmail') {
+            let chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let n = '';
+            for (let i = 0; i < 12; i++) n += chars[Math.floor(Math.random() * chars.length)];
+            currentLogin = n;
+            currentDomain = '1secmail.com';
+            currentEmail = `${currentLogin}@${currentDomain}`;
+            emailCreatedAt = Date.now();
+            inbox = [];
+            deadZone = [];
+            archived = [];
+            saveData();
+            updateMailDisplay();
+            startCountdown();
+            startAutoCheck();
+            showToast(`✅ ${currentEmail}`);
         }
-        else if(currentProvider === 'mailtm') {
-            let res=await fetch('https://api.mail.tm/accounts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address:`user${Math.floor(Math.random()*100000)}@mail.tm`,password:'temp123'})});
-            let data=await res.json();
-            if(data.address){currentEmail=data.address;currentLogin=data.address.split('@')[0];currentDomain='mail.tm';emailCreatedAt=Date.now();inbox=[];deadZone=[];archived=[];mailtmToken=data.token;}
-            else throw new Error();
+        
+        else if (currentProvider === 'mailtm') {
+            const username = `user_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+            const email = `${username}@mail.tm`;
+            const password = `Temp${Math.random().toString(36).substring(2, 10)}!`;
+            
+            const createRes = await fetch('https://api.mail.tm/accounts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ address: email, password: password })
+            });
+            
+            if (!createRes.ok) throw new Error('Error creando cuenta');
+            await createRes.json();
+            
+            const tokenRes = await fetch('https://api.mail.tm/token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ address: email, password: password })
+            });
+            
+            const tokenData = await tokenRes.json();
+            
+            currentEmail = email;
+            currentLogin = username;
+            currentDomain = 'mail.tm';
+            emailCreatedAt = Date.now();
+            mailtmToken = tokenData.token;
+            localStorage.setItem('mailtm_token', mailtmToken);
+            
+            inbox = [];
+            deadZone = [];
+            archived = [];
+            saveData();
+            updateMailDisplay();
+            startCountdown();
+            startAutoCheck();
+            showToast(`✅ ${currentEmail}`);
         }
-        else if(currentProvider === 'guerrilla') {
-            let res=await fetch('https://api.guerrillamail.com/ajax.php?f=get_email_address&lang=en');
-            let data=await res.json();
-            if(data.email_addr){currentEmail=data.email_addr;currentLogin=data.email_addr.split('@')[0];currentDomain=data.email_addr.split('@')[1];emailCreatedAt=Date.now();inbox=[];deadZone=[];archived=[];guerrillaSession=data.sid_token;}
-            else throw new Error();
+        
+        else if (currentProvider === 'guerrilla') {
+            const res = await fetch('https://api.guerrillamail.com/ajax.php?f=get_email_address&lang=en');
+            const data = await res.json();
+            if (data.email_addr) {
+                currentEmail = data.email_addr;
+                currentLogin = data.email_addr.split('@')[0];
+                currentDomain = data.email_addr.split('@')[1];
+                emailCreatedAt = Date.now();
+                guerrillaSession = data.sid_token;
+                inbox = [];
+                deadZone = [];
+                archived = [];
+                saveData();
+                updateMailDisplay();
+                startCountdown();
+                startAutoCheck();
+                showToast(`✅ ${currentEmail}`);
+            } else throw new Error();
         }
-        saveData(); updateMailDisplay(); startCountdown(); startAutoCheck(); showToast(`✅ ${currentEmail}`);
-    } catch(e) { showToast(`❌ Error, reintentando...`, true); setTimeout(() => generateEmail(), 2000); }
+        
+        else if (currentProvider === 'addyio') {
+            let key = addyioApiKey;
+            if (!key) {
+                const inputKey = document.getElementById('addyioApiKey')?.value.trim();
+                if (inputKey) key = inputKey;
+                else {
+                    showToast('⚠️ Configura tu API Key de Addy.io en Ajustes', true);
+                    return;
+                }
+            }
+            const nombre = Math.random().toString(36).substring(2, 15);
+            const email = `${nombre}@anonaddy.me`;
+            const response = await fetch('https://app.addy.io/api/v1/aliases', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${key}`,
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ email: email })
+            });
+            if (!response.ok) throw new Error('Error creando alias en Addy.io');
+            currentEmail = email;
+            currentLogin = nombre;
+            currentDomain = 'anonaddy.me';
+            emailCreatedAt = Date.now();
+            inbox = [];
+            deadZone = [];
+            archived = [];
+            saveData();
+            updateMailDisplay();
+            startCountdown();
+            showToast(`✅ ${email} (PERMANENTE - revisa tu correo real)`);
+        }
+        
+        else if (currentProvider === 'anonli') {
+            let key = anonliApiKey;
+            if (!key) {
+                const inputKey = document.getElementById('anonliApiKey')?.value.trim();
+                if (inputKey) key = inputKey;
+                else {
+                    showToast('⚠️ Configura tu API Key de anon.li en Ajustes', true);
+                    return;
+                }
+            }
+            const response = await fetch('https://api.anon.li/v1/aliases', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${key}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ note: `Generado desde PWA - ${new Date().toISOString()}` })
+            });
+            if (!response.ok) throw new Error('Error creando alias en anon.li');
+            const data = await response.json();
+            currentEmail = data.alias;
+            currentLogin = data.alias.split('@')[0];
+            currentDomain = data.alias.split('@')[1];
+            emailCreatedAt = Date.now();
+            inbox = [];
+            deadZone = [];
+            archived = [];
+            saveData();
+            updateMailDisplay();
+            startCountdown();
+            showToast(`✅ ${currentEmail} (PERMANENTE - revisa tu correo real)`);
+        }
+        
+    } catch (error) {
+        console.error(error);
+        showToast(`❌ Error, reintentando...`, true);
+        setTimeout(() => generateEmail(), 2000);
+    }
 }
 
 async function checkInbox() {
     if(!currentLogin || !currentDomain) return;
+    
+    if (currentProvider === 'mailtm') {
+        await verificarYRegenerarMailTM();
+    }
+    
+    if (currentProvider === 'addyio' || currentProvider === 'anonli') {
+        let container = document.getElementById('inboxContainer');
+        if (container && (container.innerHTML === '<div class="empty">📭 Vacío</div>' || container.innerHTML.includes('se reenvían'))) {
+            container.innerHTML = `<div class="empty">📭 Los correos de ${providerNames[currentProvider]} se reenvían a tu email real.<br><span style="font-size:10px;color:#eab308;">El alias generado es PERMANENTE.</span></div>`;
+            document.getElementById('paginationContainer').style.display = 'none';
+        }
+        updateStats();
+        return;
+    }
+    
     try {
         let messages = [];
         if(currentProvider === '1secmail') {
             let res=await fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${currentDomain}`);
             messages=await res.json();
+            if (!Array.isArray(messages)) messages = [];
         } else if(currentProvider === 'mailtm') {
             let token=mailtmToken||localStorage.getItem('mailtm_token');
-            if(token){let res=await fetch('https://api.mail.tm/messages',{headers:{'Authorization':`Bearer ${token}`}});let data=await res.json();messages=data['hydra:member']||[];}
+            if(token){
+                let res=await fetch('https://api.mail.tm/messages',{
+                    headers:{'Authorization':`Bearer ${token}`,'Accept':'application/ld+json'}
+                });
+                let data=await res.json();
+                messages=data['hydra:member']||[];
+            }
         } else if(currentProvider === 'guerrilla') {
-            if(guerrillaSession){let res=await fetch(`https://api.guerrillamail.com/ajax.php?f=get_email_list&sid_token=${guerrillaSession}&lang=en`);let data=await res.json();messages=data.list||[];}
+            if(guerrillaSession){
+                let res=await fetch(`https://api.guerrillamail.com/ajax.php?f=get_email_list&sid_token=${guerrillaSession}&lang=en`);
+                let data=await res.json();
+                messages=data.list||[];
+            }
         }
         if(messages?.length){
-            let existingIds=new Set([...inbox.map(m=>m.id),...archived.map(m=>m.id)]);
+            let existingIds=new Set([...inbox.map(m=>m.id),...archived.map(m=>m.id),...deadZone.map(m=>m.id)]);
             let newMessages=messages.filter(m=>!existingIds.has(m.id));
             for(let msg of newMessages){
                 let fullMsg=null;
-                if(currentProvider==='1secmail'){let res=await fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${currentLogin}&domain=${currentDomain}&id=${msg.id}`);fullMsg=await res.json();}
-                else if(currentProvider==='mailtm'){let token=mailtmToken||localStorage.getItem('mailtm_token');let res=await fetch(`https://api.mail.tm/messages/${msg.id}`,{headers:{'Authorization':`Bearer ${token}`}});fullMsg=await res.json();}
-                else if(currentProvider==='guerrilla'){let res=await fetch(`https://api.guerrillamail.com/ajax.php?f=fetch_email&sid_token=${guerrillaSession}&email_id=${msg.mail_id}&lang=en`);let data=await res.json();fullMsg={from:data.mail_from,subject:data.mail_subject,textBody:data.mail_body};}
+                if(currentProvider==='1secmail'){
+                    let res=await fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${currentLogin}&domain=${currentDomain}&id=${msg.id}`);
+                    fullMsg=await res.json();
+                }
+                else if(currentProvider==='mailtm'){
+                    let token=mailtmToken||localStorage.getItem('mailtm_token');
+                    let res=await fetch(`https://api.mail.tm/messages/${msg.id}`,{
+                        headers:{'Authorization':`Bearer ${token}`}
+                    });
+                    fullMsg=await res.json();
+                }
+                else if(currentProvider==='guerrilla'){
+                    let res=await fetch(`https://api.guerrillamail.com/ajax.php?f=fetch_email&sid_token=${guerrillaSession}&email_id=${msg.mail_id}&lang=en`);
+                    let data=await res.json();
+                    fullMsg={from:data.mail_from,subject:data.mail_subject,textBody:data.mail_body};
+                }
                 if(fullMsg){
                     let bodyText=fullMsg.textBody||fullMsg.htmlBody||'';
                     let codeMatch=bodyText.match(/\b\d{4,8}\b/);
@@ -569,6 +777,16 @@ function renderCurrentTab() {
     let start = (currentPage - 1) * ITEMS_PER_PAGE;
     let pageItems = allItems.slice(start, start + ITEMS_PER_PAGE);
     let container = document.getElementById('inboxContainer');
+    
+    if ((currentProvider === 'addyio' || currentProvider === 'anonli') && allItems.length === 0) {
+        container.innerHTML = `<div class="empty">
+            📭 Los correos de ${providerNames[currentProvider]} se reenvían a tu email real.<br>
+            <span style="font-size:10px;color:#eab308;">✅ El alias ${currentEmail || 'generado'} es PERMANENTE y no caduca.</span>
+        </div>`;
+        document.getElementById('paginationContainer').style.display = 'none';
+        return;
+    }
+    
     if(pageItems.length === 0) { container.innerHTML = '<div class="empty">📭 Vacío</div>'; document.getElementById('paginationContainer').style.display = 'none'; return; }
     container.innerHTML = pageItems.map((e, idx) => {
         let badgeClass = e.tipo === 'codigo' ? 'badge-code' : (e.tipo === 'pago' ? 'badge-pago' : 'badge-total');
@@ -599,20 +817,85 @@ function goNextPage() { let total = Math.ceil(getCurrentItems().length / ITEMS_P
 window.viewEmail = function(idx) { let all = getCurrentItems(); let e = all[idx]; if(!e) return; alert(`📧 DE: ${e.from}\n📧 ASUNTO: ${e.subject}\n${e.code ? `🔐 CÓDIGO: ${e.code}` : ''}\n🎯 ${e.badge || 'General'}\n\n📝 MENSAJE:\n${e.body?.substring(0,500)}`); if(e.code) navigator.clipboard.writeText(e.code); }
 window.toggleFav = function(idx) { let all = getCurrentItems(); let e = all[idx]; if(e) { e.fav = !e.fav; saveData(); renderCurrentTab(); } }
 window.enviarAMano = async function(idx) { let all = getCurrentItems(); let e = all[idx]; if(e) { showToast('📧 Enviando...'); await enviarAGmail(e, idx); } }
-window.deleteItem = function(idx) { showConfirmModal('¿Eliminar este correo?', () => { let pin = prompt('🔐 PIN:'); if(pin !== PIN) { showToast('PIN incorrecto', true); return; } let arr = currentTab === 'inbox' ? inbox : (currentTab === 'archived' ? archived : deadZone); let realIdx = getCurrentItems().findIndex((e,i) => i === idx); if(realIdx !== -1) arr.splice(realIdx,1); saveData(); renderCurrentTab(); showToast('🗑️ Eliminado'); }); }
+window.deleteItem = function(idx) { 
+    let pin = prompt('🔐 PIN (1515):'); 
+    if(pin !== PIN) { showToast('PIN incorrecto', true); return; } 
+    let arr = currentTab === 'inbox' ? inbox : (currentTab === 'archived' ? archived : deadZone); 
+    let all = getCurrentItems(); 
+    let e = all[idx]; 
+    if(e) { 
+        let realIdx = arr.findIndex(item => item.id === e.id); 
+        if(realIdx !== -1) arr.splice(realIdx,1); 
+        saveData(); 
+        renderCurrentTab(); 
+        showToast('🗑️ Eliminado'); 
+    } 
+}
 window.moveToDead = function(idx) { let arr = currentTab === 'inbox' ? inbox : archived; let all = getCurrentItems(); let e = all[idx]; if(e) { let realIdx = arr.findIndex(item => item.id === e.id); if(realIdx !== -1) { arr.splice(realIdx,1); deadZone.unshift(e); saveData(); renderCurrentTab(); showToast('📦 Movido a papelera'); } } }
 window.recoverItem = function(idx) { let all = getCurrentItems(); let e = all[idx]; if(e) { let realIdx = deadZone.findIndex(item => item.id === e.id); if(realIdx !== -1) { deadZone.splice(realIdx,1); inbox.unshift(e); saveData(); renderCurrentTab(); showToast('↩️ Recuperado'); } } }
 function changeTab(tab) { currentTab = tab; currentPage = 1; document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active'); renderCurrentTab(); }
 function updateSearch() { searchTerm = document.getElementById('searchInputSm').value.toLowerCase(); currentPage = 1; renderCurrentTab(); }
 
-function exportJson(){ let data={currentProvider,currentEmail,currentLogin,currentDomain,emailCreatedAt,inbox,deadZone,archived,autoArchive,telegramEnabled,autoGmailEnabled,telegramCount,gmailCount,darkMode,expirationAlert,notificationsEnabled,soundEnabled,autoCopyCode,guerrillaSession,mailtmToken,gmailCodigos,gmailPagos,gmailTodo}; let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'})); a.download=`respaldo_${new Date().toISOString().slice(0,19)}.json`; a.click(); showToast('✅ Exportado'); }
+function saveApiKeys() {
+    let newAddy = document.getElementById('addyioApiKey').value.trim();
+    let newAnon = document.getElementById('anonliApiKey').value.trim();
+    if (newAddy) addyioApiKey = newAddy;
+    if (newAnon) anonliApiKey = newAnon;
+    saveData();
+    showToast('✅ API Keys guardadas');
+    document.getElementById('addyioApiKey').value = '';
+    document.getElementById('anonliApiKey').value = '';
+}
+
+function exportJson(){ let data={currentProvider,currentEmail,currentLogin,currentDomain,emailCreatedAt,inbox,deadZone,archived,autoArchive,telegramEnabled,autoGmailEnabled,telegramCount,gmailCount,darkMode,expirationAlert,notificationsEnabled,soundEnabled,autoCopyCode,guerrillaSession,mailtmToken,gmailCodigos,gmailPagos,gmailTodo,addyioApiKey,anonliApiKey}; let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'})); a.download=`respaldo_${new Date().toISOString().slice(0,19)}.json`; a.click(); showToast('✅ Exportado'); }
 function exportCsv(){ let all=[...archived,...inbox,...deadZone]; if(all.length===0){showToast('No hay datos',true);return;} let csv=[["Fecha","Remitente","Asunto","Código","Clasificación"]]; all.forEach(m=>{csv.push([m.time,m.from,m.subject,m.code||'',m.badge||'General']);}); let blob=new Blob(["\uFEFF"+csv.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n')],{type:'text/csv'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`codigos_${new Date().toISOString().slice(0,19)}.csv`; a.click(); showToast('✅ CSV exportado'); }
 function showImportModal(){document.getElementById('importModal').style.display='flex';}
 function closeImportModal(){document.getElementById('importModal').style.display='none';}
-function importData(){ try{ let d=JSON.parse(document.getElementById('importJsonData').value); currentProvider=d.currentProvider||'1secmail'; currentEmail=d.currentEmail||''; currentLogin=d.currentLogin||''; currentDomain=d.currentDomain||''; emailCreatedAt=d.emailCreatedAt||null; inbox=d.inbox||[]; deadZone=d.deadZone||[]; archived=d.archived||[]; autoArchive=d.autoArchive!==undefined?d.autoArchive:true; telegramEnabled=d.telegramEnabled!==undefined?d.telegramEnabled:true; autoGmailEnabled=d.autoGmailEnabled!==undefined?d.autoGmailEnabled:true; telegramCount=d.telegramCount||0; gmailCount=d.gmailCount||0; darkMode=d.darkMode||false; expirationAlert=d.expirationAlert!==undefined?d.expirationAlert:true; notificationsEnabled=d.notificationsEnabled||false; soundEnabled=d.soundEnabled||false; autoCopyCode=d.autoCopyCode!==undefined?d.autoCopyCode:true; guerrillaSession=d.guerrillaSession||null; mailtmToken=d.mailtmToken||null; gmailCodigos=d.gmailCodigos||'manzaxxoop@gmail.com'; gmailPagos=d.gmailPagos||'calvoe847@gmail.com'; gmailTodo=d.gmailTodo||'usototal057@gmail.com'; saveData(); applyTheme(); updateSwitches(); updateProviderUI(); updateMailDisplay(); startCountdown(); startAutoCheck(); renderCurrentTab(); showToast('✅ Restaurado'); closeImportModal(); }catch(e){showToast('❌ JSON inválido',true);} }
+function importData(){ try{ let d=JSON.parse(document.getElementById('importJsonData').value); currentProvider=d.currentProvider||'1secmail'; currentEmail=d.currentEmail||''; currentLogin=d.currentLogin||''; currentDomain=d.currentDomain||''; emailCreatedAt=d.emailCreatedAt||null; inbox=d.inbox||[]; deadZone=d.deadZone||[]; archived=d.archived||[]; autoArchive=d.autoArchive!==undefined?d.autoArchive:true; telegramEnabled=d.telegramEnabled!==undefined?d.telegramEnabled:true; autoGmailEnabled=d.autoGmailEnabled!==undefined?d.autoGmailEnabled:true; telegramCount=d.telegramCount||0; gmailCount=d.gmailCount||0; darkMode=d.darkMode||false; expirationAlert=d.expirationAlert!==undefined?d.expirationAlert:true; notificationsEnabled=d.notificationsEnabled||false; soundEnabled=d.soundEnabled||false; autoCopyCode=d.autoCopyCode!==undefined?d.autoCopyCode:true; guerrillaSession=d.guerrillaSession||null; mailtmToken=d.mailtmToken||null; gmailCodigos=d.gmailCodigos||'manzaxxoop@gmail.com'; gmailPagos=d.gmailPagos||'calvoe847@gmail.com'; gmailTodo=d.gmailTodo||'usototal057@gmail.com'; addyioApiKey=d.addyioApiKey||''; anonliApiKey=d.anonliApiKey||''; saveData(); applyTheme(); updateSwitches(); updateProviderUI(); updateMailDisplay(); startCountdown(); startAutoCheck(); renderCurrentTab(); showToast('✅ Restaurado'); closeImportModal(); }catch(e){showToast('❌ JSON inválido',true);} }
 function restorePreviousEmail(){ let pin=prompt('🔐 PIN:'); if(pin!==PIN){showToast('PIN incorrecto',true);return;} let history=JSON.parse(localStorage.getItem('luisr_email_history')||'[]'); if(history.length===0){showToast('No hay historial',true);return;} let last=history[history.length-1]; currentEmail=last.email; currentLogin=last.login; currentDomain=last.domain; emailCreatedAt=last.createdAt; inbox=last.inbox||[]; deadZone=last.deadZone||[]; archived=last.archived||[]; saveData(); updateMailDisplay(); renderCurrentTab(); startCountdown(); startAutoCheck(); showToast(`📧 Recuperado: ${currentEmail}`); }
-function clearAllData(){ showConfirmModal('¿Borrar TODOS los datos?',()=>{ let pin=prompt('🔐 PIN:'); if(pin!==PIN){showToast('PIN incorrecto',true);return;} localStorage.removeItem(STORAGE_KEY); location.reload(); }); }
+function clearAllData(){ 
+    let pin = prompt('🔐 PIN (1515):'); 
+    if(pin !== PIN){ showToast('PIN incorrecto', true); return; } 
+    localStorage.removeItem(STORAGE_KEY); 
+    location.reload(); 
+}
 function setupBackupEndpoint(){ if(window.location.search.includes('backup=1')||window.location.pathname.includes('/api/backup')){ setTimeout(async()=>{ let result={success:true,message:'Respaldo ejecutado',date:new Date().toISOString()}; if(telegramEnabled&&autoBackupEnabled) await sendAutoBackupToTelegram(); document.body.innerHTML=`<pre style="color:#eab308;background:#0a0e1a;padding:20px;text-align:center">${JSON.stringify(result,null,2)}</pre>`; },100); return true; } return false; }
+
+// FUNCIONES PARA OCULTAR/MOSTRAR GMAILS
+function showGmailConfig() {
+    let pin = prompt('🔐 Introduce el PIN para ver/configurar los Gmails destino:');
+    if (pin !== PIN) {
+        showToast('PIN incorrecto', true);
+        return;
+    }
+    let section = document.getElementById('gmailHiddenSection');
+    if (section.style.display === 'none' || section.style.display === '') {
+        section.style.display = 'block';
+        showToast('Configuración de Gmails visible. Edita y haz clic en "Actualizar Gmails"');
+    } else {
+        section.style.display = 'none';
+    }
+}
+
+function toggleGmailsVisibility() {
+    let pin = prompt('🔐 Introduce el PIN para ver los Gmails destino:');
+    if (pin !== PIN) {
+        showToast('PIN incorrecto', true);
+        return;
+    }
+    document.getElementById('gmailCodigosSpan').innerText = gmailCodigos;
+    document.getElementById('gmailPagosSpan').innerText = gmailPagos;
+    document.getElementById('gmailTodoSpan').innerText = gmailTodo;
+    let btn = document.getElementById('toggleGmailsBtn');
+    btn.innerText = '🙈 Ocultar Gmails';
+    btn.onclick = () => {
+        document.getElementById('gmailCodigosSpan').innerText = '********';
+        document.getElementById('gmailPagosSpan').innerText = '********';
+        document.getElementById('gmailTodoSpan').innerText = '********';
+        btn.innerText = '🔒 Mostrar Gmails';
+        btn.onclick = () => toggleGmailsVisibility();
+    };
+}
 
 if('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-worker.js').then(reg => console.log('SW registrado')).catch(err => console.log('SW error:', err)); }
 
@@ -648,6 +931,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.tab').forEach(t=>{t.onclick=()=>changeTab(t.dataset.tab);});
     document.getElementById('prevPageBtn').onclick=goPrevPage;
     document.getElementById('nextPageBtn').onclick=goNextPage;
+    document.getElementById('addyioApiKey')?.addEventListener('change', saveApiKeys);
+    document.getElementById('anonliApiKey')?.addEventListener('change', saveApiKeys);
+    document.getElementById('showGmailConfigBtn').onclick = showGmailConfig;
+    document.getElementById('toggleGmailsBtn').onclick = toggleGmailsVisibility;
     window.addEventListener('click',(e)=>{ if(!document.getElementById('settingsPanel').contains(e.target)&&e.target!==document.getElementById('gearBtn')) document.getElementById('settingsPanel').classList.remove('show'); });
     if(currentEmail){ let history=JSON.parse(localStorage.getItem('luisr_email_history')||'[]'); history.push({email:currentEmail,login:currentLogin,domain:currentDomain,createdAt:emailCreatedAt,inbox,deadZone,archived}); if(history.length>10)history.shift(); localStorage.setItem('luisr_email_history',JSON.stringify(history)); }
 });
